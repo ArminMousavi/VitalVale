@@ -17,10 +17,10 @@ public class VitalVale : ModuleRules
 
         PrivateIncludePaths.Add("ThirdParty/rapidjson/include");
 
-        PublicIncludePaths.Add("D:\\Kharazmi\\VitalVale\\Source\\ThirdParty\\include");
+        PublicIncludePaths.Add("C:\\Users\\Frixy\\Documents\\Kharazmi\\VitalVale\\Source\\ThirdParty\\include");
 
         //PublicAdditionalLibraries.Add("ThirdParty/capnproto/src/capnp/Debug/capnp.lib");
-        PublicAdditionalLibraries.Add("D:\\Kharazmi\\VitalVale\\Source\\ThirdParty\\lib\\flatbuffers.lib");
+        PublicAdditionalLibraries.Add("C:\\Users\\Frixy\\Documents\\Kharazmi\\VitalVale\\Source\\ThirdParty\\lib\\flatbuffers.lib");
         //PublicAdditionalLibraries.Add("C:\\Users\\Frixy\\Documents\\Unreal Projects\\VitalVale\\Source\\ThirdParty\\lib\\libprotobuf.lib");
         //PublicAdditionalLibraries.Add("C:\\Users\\Frixy\\Documents\\Unreal Projects\\VitalVale\\Source\\ThirdParty\\capnproto\\src\\kj\\Debug\\kj-async.lib");
         // Uncomment if you are using Slate UI

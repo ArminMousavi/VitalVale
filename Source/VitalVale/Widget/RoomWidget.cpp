@@ -89,7 +89,7 @@ void URoomWidget::OnRoomClicked()
 	NetHandler->NetworkManager->SendPacket(PlayOutEnterGame->JSerialize());
 	delete PlayOutEnterGame;
 
-	UGameplayStatics::OpenLevel(World, "Lobby");
+	UGameplayStatics::OpenLevel(World, "PTG");
 
 
 }

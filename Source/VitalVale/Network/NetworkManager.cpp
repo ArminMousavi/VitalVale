@@ -1,4 +1,3 @@
-
 // Copyright @ 2023 By Seyed Armin Mousavi, All rights are reserved. Using this code isn't allowed in anywhere.
 
 
@@ -12,12 +11,12 @@
 #include "Packets/PacketBase.h"
 #include "HAL/UnrealMemory.h"
 #include "Serialization/BufferArchive.h"
+#include "Interfaces/IPv4/IPv4Endpoint.h"
 #include <flatbuffers/flatbuffers.h>
 #include <flatbuffers/flexbuffers.h>
 
 UNetworkManager::UNetworkManager()
 {
-
 	if (GEngine)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Blue, TEXT("Network Manager Initialized."));
@@ -30,6 +29,8 @@ UNetworkManager::UNetworkManager()
 	FString Address = TEXT("127.0.0.1");
 	int32 Port = 57612;
 
+	Socket->SetNonBlocking(true);
+
 	FIPv4Address IP;
 	FIPv4Address::Parse(Address, IP);
 	TSharedPtr<FInternetAddr> RemoteAddress = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
@@ -38,9 +39,11 @@ UNetworkManager::UNetworkManager()
 	Socket->Connect(*RemoteAddress);
 
 	// Listen to UDP Packets
-	if (Socket != nullptr) {
+	if (Socket != nullptr)
+	{
 		flexbuffers::Builder fbb;
-		fbb.Vector([&]() {
+		fbb.Vector([&]()
+		{
 			fbb.Int(0);
 			fbb.Int(1402);
 		});
@@ -56,28 +59,31 @@ UNetworkManager::UNetworkManager()
 			if (bytesSent > 0)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Bytes Sent to Server: %i"), bytesSent);
+				UDPSocketListener();
 			}
 		}
 
-/*		PlayOutRoomList* Packet;
-		Packet->set_id(12);
-		Packet->set_id(14);
-
-		std::string Serialized;
-		Packet->SerializeToString(&Serialized);
 
 
-		int32 SentBytes = 0;
-		if (Socket->Send(reinterpret_cast<const uint8*>(Serialized.c_str()), Serialized.size(), SentBytes))
-		{
-			if (SentBytes > 0)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Bytes Sent to Server: %i"), SentBytes);
-			}
-		}
-
-		delete &Packet;*/
+		/*		PlayOutRoomList* Packet;
+				Packet->set_id(12);
+				Packet->set_id(14);
 		
+				std::string Serialized;
+				Packet->SerializeToString(&Serialized);
+		
+		
+				int32 SentBytes = 0;
+				if (Socket->Send(reinterpret_cast<const uint8*>(Serialized.c_str()), Serialized.size(), SentBytes))
+				{
+					if (SentBytes > 0)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Bytes Sent to Server: %i"), SentBytes);
+					}
+				}
+		
+				delete &Packet;*/
+
 
 		/*TArray<uint8> OutCompressedData;
 
@@ -117,7 +123,6 @@ UNetworkManager::UNetworkManager()
 		}
 
 		UE_LOG(LogTemp, Warning, TEXT("Bytes Sent to Server: %i"), BytesSent);*/
-		
 
 
 		/*		PacketMatchmaking packet;
@@ -148,7 +153,8 @@ void UNetworkManager::SendPacket(const FString& PacketData)
 		const char* data = TCHAR_TO_UTF8(*PacketData);
 		int32 DataSize = FCString::Strlen(ANSI_TO_TCHAR(data));;
 
-		int32 Length = FMath::Min(DataSize, 2048 - 4); // MAX_PACKET_LENGTH is the maximum allowed packet length, excluding the length field
+		int32 Length = FMath::Min(DataSize, 2048 - 4);
+		// MAX_PACKET_LENGTH is the maximum allowed packet length, excluding the length field
 		char* Buffer = new char[Length + 4];
 		*(int32*)Buffer = Length; // Write the length to the first 4 bytes
 
@@ -157,9 +163,6 @@ void UNetworkManager::SendPacket(const FString& PacketData)
 		Socket->Send((uint8*)Buffer, Length + 4, SentBytes); // Send the prefixed data
 		delete[] Buffer; // Free the buffer
 		UE_LOG(LogTemp, Warning, TEXT("DataSize : %i"), DataSize);
-
-
-
 	}
 }
 
@@ -180,18 +183,17 @@ void UNetworkManager::UpdateMenuRooms(rapidjson::Value& InGameSessions)
 
 void UNetworkManager::UDPSocketListener()
 {
-	if (!Socket) return;
+	if (!Socket)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Socket is nullptr"));
+		return;
+	}
 
 	FRunnableThread* Thread = FRunnableThread::Create(new FPacketPipeline(Socket, this), TEXT("PacketPipelineThread"));
 }
-
 
 
 UGameNetHandler* UNetworkManager::GetGameNetHandler()
 {
 	return this->NetHandler;
 }
-
-
-
-

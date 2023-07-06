@@ -1,4 +1,7 @@
 #include "VitalCharacter.h"
+
+#include <flatbuffers/flexbuffers.h>
+
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -82,10 +85,21 @@ void AVitalCharacter::LookUp(float Value)
 void AVitalCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (this->GetActorLocation() != oldPosition)
-	{
-		UVitalValeInstance* GameInstance = Cast<>()
-	}
+	// if (this->GetActorLocation() != oldPosition)
+	// {
+	// 	UVitalValeInstance* GameInstance = Cast<UVitalValeInstance>(GetGameInstance());
+	// 	if (GameInstance)
+	// 	{
+	// 		if (GameInstance->GetNetworkMg() != nullptr)
+	// 		{
+	// 			flexbuffers::Builder fbb;
+	// 			fbb.Vector([&]()
+	// 			{
+	// 				fbb.Int()
+	// 			});
+	// 		}
+	// 	}
+	// }
 	/*	if (this->GetActorLocation() != oldPosition)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("position changed"));
@@ -115,5 +129,5 @@ void AVitalCharacter::Tick(float DeltaTime)
 			}
 			
 		}*/
-		oldPosition = this->GetActorLocation();
+	oldPosition = this->GetActorLocation();
 }
